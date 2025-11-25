@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "Launch Chrome against localhost",
             //"url": "http://localhost:5500",
-            "url": "http://127.0.0.1:5500/04_HtmlElements/index.html", // to DEBUG
+            "url": "http://127.0.0.1:5500/05_JSON/index.html", // change the path to DEBUG
             "webRoot": "${workspaceFolder}"
         }
     ]

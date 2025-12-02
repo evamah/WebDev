@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", () => {
     pageLoaded();
 });
@@ -7,6 +6,7 @@ let txt1; // global variables
 let txt2;
 let btn;
 let lblRes;
+
 
 function calculate() {
     let num1 = parseFloat(txt1.value);

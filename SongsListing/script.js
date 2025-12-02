@@ -1,23 +1,25 @@
+//--Get HTML DOM Element References
 const form = document.getElementById('songForm');
 const list = document.getElementById('songList');
 const submitBtn = document.getElementById('submitBtn');
 
-// if not exists in localStorage get empty array
-// else get json tet and convert it to object json
-let songs = JSON.parse(localStorage.getItem('playlist')) || [];
+//--if not exist in localStorage get empty array 
+//-- else get json text and convert it to object json
+let songs = JSON.parse(localStorage.getItem('songs')) || [];
 
-saveAndRender();
 
-// user click the "+ Aaa" button 
+//--user click the +add button  
 form.addEventListener('submit', (e) => {
-    // dont submit the form to server yet let me handle it here
+    //--dont submit the form to the server yet let me handle it here
     e.preventDefault();
 
-    // read forms data
+    //--read form data
     const title = document.getElementById('title').value;
     const url = document.getElementById('url').value;
 
-    // create JSON object based on URL title
+    //--TODO: VALIDATE FIELDS
+
+    //--create JSON object based on URL title
     const song = {
         id: Date.now(),  // Unique ID
         title: title,
@@ -28,29 +30,30 @@ form.addEventListener('submit', (e) => {
 
     songs.push(song);
 
-    //TO DO SAVE  AND RERENDER 
-    saveAndRender();
+    //TO DO SAVE AND RERENDER 
+    SaveAndRender();
+
     form.reset();
 });
 
+//--save to Local Storage and render UI Table
+function SaveAndRender() {
 
-function saveAndRender() {
+    localStorage.setItem('songs', JSON.stringify(songs));
 
-    localStorage.setItem('playlist', JSON.stringify(songs));
-
-    // TODO  RELODE IT
-    renderSongs(songs);
-
+    //TODO RENDER UI TABLE
+    renderSongs();
 }
 
 
-function renderSongs(songArray) {
+
+function renderSongs() {
     list.innerHTML = ''; // Clear current list
 
-    songArray.forEach(song => {
+    songs.forEach(song => {
         // Create table row
         const row = document.createElement('tr');
-
+        //
         row.innerHTML = `
             <td>${song.title}</td>
             <td><a href="${song.url}" target="_blank" class="text-info">Watch</a></td>
@@ -72,11 +75,39 @@ function deleteSong(id) {
     if (confirm('Are you sure?')) {
         // Filter out the song with the matching ID
         songs = songs.filter(song => song.id !== id);
-        saveAndRender();
+        SaveAndRender();
     }
 }
 
 
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
 
+    const title = document.getElementById('title').value;
+    const url = document.getElementById('url').value;
+    const id = document.getElementById('songId').value; // Check hidden ID
 
+    if (id) {
+        // --- UPDATE MODE ---
+        const index = songs.findIndex(s => s.id == id);
+        songs[index].title = title;
+        songs[index].url = url;
 
+        // Reset Button
+        submitBtn.innerHTML = '<i class="fas fa-plus"></i> Add';
+        submitBtn.classList.replace('btn-warning', 'btn-success');
+        document.getElementById('songId').value = '';
+    } else {
+        // --- ADD MODE ---
+        const song = {
+            id: Date.now(),
+            title: title,
+            url: url,
+            dateAdded: Date.now()
+        };
+        songs.push(song);
+    }
+
+    saveAndRender();
+    form.reset();
+});
